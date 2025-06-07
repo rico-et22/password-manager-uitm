@@ -6,8 +6,8 @@ import { signIn } from "app/auth"
 
 // Zod schema
 const loginSchema = z.object({
-  email: z.string().email({ message: "Niepoprawny email" }),
-  password: z.string().min(1, { message: "Hasło jest wymagane" }),
+  email: z.string().email({ message: "Incorrect email" }),
+  password: z.string().min(1, { message: "Password is necessary" }),
 })
 
 export async function login(prevState: any, formData: FormData | null) {
@@ -33,6 +33,6 @@ export async function login(prevState: any, formData: FormData | null) {
 
     return { success: true }
   } catch (err) {
-    return { error: "Nieprawidłowy email lub hasło" }
+    return { error: "Incorrect email or password" }
   }
 }

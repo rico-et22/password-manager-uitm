@@ -20,7 +20,7 @@ export default function RegisterPage() {
     }
 
     if (state?.success) {
-      toast.success("Konto utworzone pomyślnie!")
+      toast.success("Account created successfully!")
       router.push("/login")
     }
   }, [state, router])
