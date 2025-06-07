@@ -1,25 +1,3 @@
-// "use server"
-
-// import { signIn } from "app/auth"
-
-// export async function login(prevState: any, formData: FormData | null) {
-//   if (!formData) return
-
-//   const email = formData.get("email") as string
-//   const password = formData.get("password") as string
-
-//   try {
-//     await signIn("credentials", {
-//       email,
-//       password,
-//       redirect: false,
-//     })
-
-//     return { success: true }
-//   } catch (err) {
-//     return { error: "Incorrect email or password" }
-//   }
-// }
 // app/actions/login.ts
 "use server"
 
@@ -38,7 +16,7 @@ export async function login(prevState: any, formData: FormData | null) {
   const email = formData.get("email")
   const password = formData.get("password")
 
-  // Walidacja
+  // Validation
   const result = loginSchema.safeParse({ email, password })
 
   if (!result.success) {

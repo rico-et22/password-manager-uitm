@@ -1,6 +1,5 @@
 import "./globals.css"
 import { Toaster } from "sonner"
-
 import { GeistSans } from "geist/font/sans"
 
 let title = "Next.js + Postgres Auth Starter"
