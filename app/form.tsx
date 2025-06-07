@@ -2,13 +2,14 @@ export function Form({
   action,
   children,
 }: {
-  action: any;
-  children: React.ReactNode;
+  action: any
+  children: React.ReactNode
 }) {
   return (
     <form
       action={action}
       className="flex flex-col space-y-4 bg-gray-50 px-4 py-8 sm:px-16"
+      noValidate
     >
       <div>
         <label
@@ -44,5 +45,5 @@ export function Form({
       </div>
       {children}
     </form>
-  );
+  )
 }

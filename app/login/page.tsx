@@ -1,10 +1,17 @@
+"use client"
+
 import Link from "next/link"
 import { Form } from "app/form"
-import { signIn } from "app/auth"
+import { login } from "app/actions/login"
 import { SubmitButton } from "app/submit-button"
-import { Button } from "@/components/ui/button"
+import { useFormState } from "react-dom"
+import { useEffect } from "react"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export default function Login() {
+  const [state, formAction] = useFormState(login, null)
+
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
       <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
@@ -14,26 +21,37 @@ export default function Login() {
             Use your email and password to sign in
           </p>
         </div>
-        <Form
-          action={async (formData: FormData) => {
-            "use server"
-            await signIn("credentials", {
-              redirectTo: "/protected",
-              email: formData.get("email") as string,
-              password: formData.get("password") as string,
-            })
-          }}
-        >
-          <SubmitButton>Sign in</SubmitButton>
-          <p className="text-center text-sm text-gray-600">
-            {"Don't have an account? "}
-            <Link href="/register" className="font-semibold text-gray-800">
-              Sign up
-            </Link>
-            {" for free."}
-          </p>
+        <Form action={formAction}>
+          <FormWrapper state={state} />
         </Form>
       </div>
     </div>
+  )
+}
+
+function FormWrapper({ state }: { state?: any }) {
+  const router = useRouter()
+
+  useEffect(() => {
+    if (state?.error) {
+      toast.error(state.error)
+    }
+
+    if (state?.success) {
+      router.push("/protected")
+    }
+  }, [state, router])
+
+  return (
+    <>
+      <SubmitButton>Sign in</SubmitButton>
+      <p className="text-center text-sm text-gray-600">
+        {"Don't have an account? "}
+        <Link href="/register" className="font-semibold text-gray-800">
+          Sign up
+        </Link>
+        {" for free."}
+      </p>
+    </>
   )
 }

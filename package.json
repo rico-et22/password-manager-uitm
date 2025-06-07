@@ -27,7 +27,8 @@
     "shadcn": "^2.6.0",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
-    "tw-animate-css": "^1.3.4"
+    "tw-animate-css": "^1.3.4",
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
