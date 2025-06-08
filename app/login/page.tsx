@@ -19,7 +19,7 @@ export default function Login() {
       <div className="absolute top-4 left-1/2 -translate-x-1/2">
         <Image
           src={uitm_logo}
-          alt="Password Manager Lobo"
+          alt="Password Manager Logo"
           className="max-w-40"
           priority
         />

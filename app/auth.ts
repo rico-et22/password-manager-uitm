@@ -21,4 +21,22 @@ export const {
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user, profile }) {
+      console.log('JWT Callback', { token, user, profile });
+      if (user) {
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      console.log(session, token);
+      if (session.user) {
+        session.user.firstName = token.firstName as string;
+        session.user.lastName = token.lastName as string;
+      }
+      return session;
+    },
+  },
 });
