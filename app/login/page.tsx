@@ -50,7 +50,7 @@ function FormWrapper({ state }: { state?: any }) {
     }
 
     if (state?.success) {
-      router.push("/protected")
+      router.push("/home")
     }
   }, [state, router])
 
