@@ -38,7 +38,7 @@ function Button({
   size,
   asChild = false,
   ...props
-}: React.ComponentProps<'button'> &
+}: React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
   }) {
