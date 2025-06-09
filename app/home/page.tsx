@@ -2,6 +2,7 @@ import { auth, signOut } from 'app/auth';
 import Image from 'next/image';
 import uitm_logo from '@/app/assets/utim_logo.png';
 import { Button } from '@/components/ui/button';
+import { PasswordCard } from '@/components/ui/passwordCard';
 
 export default async function ProtectedPage() {
   let session = await auth();
@@ -18,7 +19,9 @@ export default async function ProtectedPage() {
         />
         <SignOut />
       </header>
-      <main className=" p-3 md:p-6">Content here</main>
+      <main className=" p-3 md:p-6">
+        <PasswordCard />
+      </main>
     </>
   );
 }
