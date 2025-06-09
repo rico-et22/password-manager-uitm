@@ -7,4 +7,5 @@ export default {
     hoverOnlyWhenSupported: true,
   },
   plugins: [],
+  darkMode: 'class',
 } satisfies Config;
