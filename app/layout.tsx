@@ -2,9 +2,9 @@ import "./globals.css"
 import { Toaster } from "sonner"
 import { GeistSans } from "geist/font/sans"
 
-let title = "Next.js + Postgres Auth Starter"
+let title = "UITM Authenticator"
 let description =
-  "This is a Next.js starter kit that uses NextAuth.js for simple email + password login and a Postgres database to persist the data."
+  "UITM Authenticator student project"
 
 export const metadata = {
   title,
