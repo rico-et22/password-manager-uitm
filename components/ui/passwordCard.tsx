@@ -41,7 +41,7 @@ export function PasswordCard() {
   }, [expires]);
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader>Website name</CardHeader>
       <CardContent>
         2FA code: {otp}
