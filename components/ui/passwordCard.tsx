@@ -12,7 +12,7 @@ export function PasswordCard() {
       <CardHeader>Password name</CardHeader>
       <CardContent>202020</CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
+        <Button variant="secondary" className="w-full">
           Copy Password
         </Button>
         <Button variant="outline" className="w-full">
