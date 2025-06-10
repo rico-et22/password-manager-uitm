@@ -10,7 +10,7 @@ export default async function ProtectedPage() {
   return (
     <>
       <header className="relative flex items-center justify-between bg-white shadow-md px-3 md:px-6 py-3 h-24">
-        <p className="">Welcome, {session?.user?.firstName}</p>
+        <p className="max-w-[30%]">Welcome, {session?.user?.firstName}</p>
         <Image
           src={uitm_logo}
           alt="Password Manager Logo"
@@ -19,13 +19,20 @@ export default async function ProtectedPage() {
         />
         <SignOut />
       </header>
-      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
-        <PasswordCard id={0} siteName={'weq'} passwordValue={'asdasd'} />
-        <PasswordCard id={0} siteName={'qwe'} passwordValue={'asdasd'} />
-        <PasswordCard id={0} siteName={'qwe'} passwordValue={'asdasd'} />
-        <PasswordCard id={0} siteName={'qwe'} passwordValue={'asdasd'} />
-        <PasswordCard id={0} siteName={'qwe'} passwordValue={'asdas'} />
+      <main className="min-h-[80vh]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 grid-rows-auto">
+          <PasswordCard />
+          <PasswordCard />
+          <PasswordCard />
+          <PasswordCard />
+          <PasswordCard />
+        </div>
       </main>
+      <footer className="text-center text-sm text-gray-500 mt-4 border-t pt-4">
+        Created by: Kamil Pawlak w69831, Jakub Karaś w70844, Miłosz Makiel w69817 <br />
+        React + Next + TypeScript + Tailwind CSS + Radix UI + Prisma + Neon PostgreSQL +
+        totp-generator
+      </footer>
     </>
   );
 }

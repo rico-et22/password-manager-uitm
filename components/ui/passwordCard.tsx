@@ -17,9 +17,9 @@ import { useEffect, useState } from 'react';
 import { TOTP } from 'totp-generator';
 
 export interface PasswordItem {
-  id: number;
-  siteName: string;
-  passwordValue: string;
+  id?: number;
+  siteName?: string;
+  passwordValue?: string;
   secretToken?: string;
 }
 
@@ -62,9 +62,9 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken }: Passw
       <CardHeader>{siteName}</CardHeader>
       <CardContent>
         2FA code: {otp}
-        <div className="w-full h-2 bg-gray-100 relative">
+        <div className="w-full h-2 bg-gray-100 relative rounded-md mt-1">
           <div
-            className="h-2 bg-primary absolute top-0 left-0 transition-all duration-200 ease-in-out"
+            className="h-2 bg-primary absolute top-0 left-0 transition-all duration-200 ease-in-out rounded-md"
             style={{
               width: `${(timeLeft / 30) * 100}%`,
             }}
@@ -78,7 +78,7 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken }: Passw
         <Button
           variant="outline"
           className="w-full"
-          onClick={() => navigator.clipboard.writeText(passwordValue)}
+          onClick={() => navigator.clipboard.writeText('asd')}
         >
           Edit
         </Button>
