@@ -3,7 +3,7 @@ import * as React from 'react';
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div
+    <article
       data-slot="card"
       className={cn(
         'bg-card text-card-foreground flex flex-col gap-3 rounded-md border shadow-sm py-6',
