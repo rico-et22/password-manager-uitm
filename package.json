@@ -29,6 +29,7 @@
     "shadcn": "^2.6.0",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
+    "totp-generator": "^1.0.0",
     "tw-animate-css": "^1.3.4",
     "zod": "^3.25.56"
   },
