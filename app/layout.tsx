@@ -1,4 +1,5 @@
 import './globals.css';
+import { ReactQueryProvider } from './providers/react-query-provider';
 import { Toaster } from 'sonner';
 
 let title = 'UITM Authenticator';
@@ -17,11 +18,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="light">
-      <body>
-        {children}
-        <Toaster richColors />
-      </body>
-    </html>
+    <ReactQueryProvider>
+      <html lang="en" data-theme="light">
+        <body>
+          {children}
+          <Toaster richColors />
+        </body>
+      </html>
+    </ReactQueryProvider>
   );
 }
