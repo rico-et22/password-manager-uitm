@@ -3,10 +3,27 @@
 import { cn } from '@/app/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
 import { TOTP } from 'totp-generator';
 
-export function PasswordCard() {
+export interface PasswordItem {
+  id: number;
+  siteName: string;
+  passwordValue: string;
+  secretToken?: string;
+}
+
+export function PasswordCard({ siteName, id, passwordValue, secretToken }: PasswordItem) {
   const [otp, setOtp] = useState('');
   const [expires, setExpires] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -42,7 +59,7 @@ export function PasswordCard() {
 
   return (
     <Card className="w-full">
-      <CardHeader>Website name</CardHeader>
+      <CardHeader>{siteName}</CardHeader>
       <CardContent>
         2FA code: {otp}
         <div className="w-full h-2 bg-gray-100 relative">
@@ -58,12 +75,37 @@ export function PasswordCard() {
         <Button variant="secondary" className="w-full">
           Copy Password
         </Button>
-        <Button variant="outline" className="w-full">
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => navigator.clipboard.writeText(passwordValue)}
+        >
           Edit
         </Button>
-        <Button variant="destructive" className="w-full">
-          Delete
-        </Button>
+        {/* Delete dialog */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="destructive" className="w-full">
+              Delete
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Deletion</DialogTitle>
+              <DialogDescription>
+                This will permanently delete the password for {siteName}.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button variant="destructive" onClick={() => alert('Delete action triggered')}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );

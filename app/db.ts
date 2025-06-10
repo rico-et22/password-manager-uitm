@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { eq } from 'drizzle-orm';
+import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { eq, and } from 'drizzle-orm';
 import postgres from 'postgres';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
 
@@ -9,6 +9,11 @@ import { genSaltSync, hashSync } from 'bcrypt-ts';
 // https://authjs.dev/reference/adapter/drizzle
 let client = postgres(`${process.env.POSTGRES_URL!}?sslmode=require`);
 let db = drizzle(client);
+
+// export async function getUser(email: string) {
+//   const users = await ensureTableExists();
+//   return await db.select().from(users).where(eq(users.email, email));
+// }
 
 export async function getUser(email: string) {
   const users = await ensureTableExists();
@@ -53,6 +58,23 @@ if (!result[0].exists) {
     ADD COLUMN IF NOT EXISTS last_name VARCHAR(64);
   `;
 
+    const pwExists = await client`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables
+      WHERE table_schema='public' AND table_name='passwords'
+    );`;
+
+  if (!pwExists[0].exists) {
+    await client`
+      CREATE TABLE passwords (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+        site_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        password TEXT NOT NULL
+      );`;
+  }
+
   const table = pgTable('User', {
     id: serial('id').primaryKey(),
     email: varchar('email', { length: 64 }),
@@ -62,4 +84,46 @@ if (!result[0].exists) {
   });
 
   return table;
+}
+
+export const passwords = pgTable('passwords', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  siteName: varchar('site_name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }).notNull(),
+  passwordValue: varchar('password').notNull(),
+});
+
+
+export async function listPasswords(userId: number) {
+  return await db.select().from(passwords).where(eq(passwords.userId, userId));
+}
+
+// Create a new password entry tied to the current user
+export async function createPassword(
+  userId: number,
+  siteName: string,
+  email: string,
+  passwordValue: string
+) {
+  return await db.insert(passwords).values({ userId, siteName, email, passwordValue });
+}
+
+// Update an existing entry, only if it belongs to the user
+export async function updatePassword(
+  userId: number,
+  id: number,
+  data: Partial<{ siteName: string; email: string; passwordValue: string }>
+) {
+  return await db
+    .update(passwords)
+    .set(data)
+    .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
+}
+
+// Delete an entry, only if it belongs to the user
+export async function deletePassword(userId: number, id: number) {
+  return await db
+    .delete(passwords)
+    .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 }
