@@ -18,13 +18,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ReactQueryProvider>
-      <html lang="en" data-theme="light">
-        <body>
-          {children}
-          <Toaster richColors />
-        </body>
-      </html>
-    </ReactQueryProvider>
+    <html lang="en" data-theme="light">
+      <body>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Toaster richColors />
+      </body>
+    </html>
   );
 }

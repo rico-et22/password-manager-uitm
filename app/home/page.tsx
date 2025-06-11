@@ -4,7 +4,7 @@ import uitm_logo from '@/app/assets/utim_logo.png';
 import { Button } from '@/components/ui/button';
 import { PasswordCard } from '@/components/ui/passwordCard';
 import { AddPassword } from '@/components/passwords/add-password';
-
+import { PasswordList } from '@/components/passwords/password-list';
 export default async function ProtectedPage() {
   let session = await auth();
 
@@ -25,11 +25,7 @@ export default async function ProtectedPage() {
       </header>
       <main className="min-h-[80vh]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 grid-rows-auto">
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
+          <PasswordList />
         </div>
       </main>
       <footer className="text-center text-sm text-gray-500 mt-4 border-t pt-4">

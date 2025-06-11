@@ -6,7 +6,7 @@ import { toast } from "sonner"
 //wip
 export const addPasswordHandler = async (data: AddPasswordFormType) => {
   await apiClient({
-    url: "/api/users",
+    url: "/api/passwords",
     options: {
       method: "POST",
       body: data,
