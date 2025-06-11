@@ -30,6 +30,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.57.0",
+    "react-qr-code": "^2.0.15",
     "shadcn": "^2.6.0",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",

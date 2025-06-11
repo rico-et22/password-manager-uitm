@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import { TOTP } from 'totp-generator';
 import { Input } from '@/components/ui/input';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import TwoFAModal from '../passwords/2fa-modal';
 
 export interface PasswordItem {
   id?: number;
@@ -39,7 +40,7 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
 
   useEffect(() => {
     const generateOTP = () => {
-      const { otp, expires } = TOTP.generate('JBSWY3DPEHPK3PXP');
+      const { otp, expires } = TOTP.generate(secretToken || '');
       setOtp(otp);
       setExpires(expires);
 
@@ -50,7 +51,7 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
     };
 
     generateOTP();
-  }, []);
+  }, [secretToken]);
 
   // based on expires, calculate time left in seconds
   useEffect(() => {
@@ -195,6 +196,7 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        {/* <TwoFAModal passwordId={id || 420} /> */}
       </CardFooter>
     </Card>
   );

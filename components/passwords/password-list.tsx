@@ -10,6 +10,7 @@ type Password = {
   siteName: string;
   email: string;
   passwordValue: string;
+  secretToken?: string;
 };
 
 export function PasswordList() {
@@ -28,7 +29,13 @@ export function PasswordList() {
   return (
     <>
       {data.map(p => (
-        <PasswordCard key={p.id} id={p.id} siteName={p.siteName} passwordValue={p.passwordValue} />
+        <PasswordCard
+          key={p.id}
+          id={p.id}
+          siteName={p.siteName}
+          passwordValue={p.passwordValue}
+          secretToken={p.secretToken}
+        />
       ))}
     </>
   );
