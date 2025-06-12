@@ -1,7 +1,6 @@
 import { auth } from '@/app/auth';
 import { createPassword, listPasswords } from '@/app/db';
 import { NextResponse } from 'next/server';
-import { authenticator } from 'otplib';
 
 export async function GET() {
   const session = await auth();
@@ -20,12 +19,11 @@ export async function POST(req: Request) {
   }
 
   const { siteName, email, passwordValue } = await req.json();
-    const secretToken = authenticator.generateSecret();
 
   if (!siteName || !email || !passwordValue) {
     return new NextResponse('Missing fields', { status: 400 });
   }
 
-  const created = await createPassword(session.user.id, siteName, email, passwordValue, secretToken);
+  const created = await createPassword(session.user.id, siteName, email, passwordValue);
   return NextResponse.json(created);
 }
