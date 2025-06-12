@@ -15,35 +15,50 @@ export async function getUser(email: string) {
   return await db.select().from(users).where(eq(users.email, email));
 }
 
-export async function createUser(email: string, password: string) {
+export async function createUser(email: string, password: string, firstName: string, lastName: string) {
   const users = await ensureTableExists();
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
 
-  return await db.insert(users).values({ email, password: hash });
+    return await db.insert(users).values({
+    email,
+    password: hash,
+    firstName,
+    lastName,
+  });
 }
 
 async function ensureTableExists() {
   const result = await client`
     SELECT EXISTS (
-      SELECT FROM information_schema.tables 
-      WHERE table_schema = 'public' 
+      SELECT FROM information_schema.tables
+      WHERE table_schema = 'public'
       AND table_name = 'User'
     );`;
 
-  if (!result[0].exists) {
-    await client`
-      CREATE TABLE "User" (
-        id SERIAL PRIMARY KEY,
-        email VARCHAR(64),
-        password VARCHAR(64)
-      );`;
-  }
+if (!result[0].exists) {
+  await client`
+    CREATE TABLE "User" (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(64),
+      password VARCHAR(64),
+      first_name VARCHAR(64),
+      last_name VARCHAR(64)
+    );`;
+}
+
+  await client`
+    ALTER TABLE "User"
+    ADD COLUMN IF NOT EXISTS first_name VARCHAR(64),
+    ADD COLUMN IF NOT EXISTS last_name VARCHAR(64);
+  `;
 
   const table = pgTable('User', {
     id: serial('id').primaryKey(),
     email: varchar('email', { length: 64 }),
     password: varchar('password', { length: 64 }),
+    firstName: varchar('first_name', { length: 64 }),
+    lastName: varchar('last_name', { length: 64 }),
   });
 
   return table;
