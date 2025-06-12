@@ -26,6 +26,6 @@ export async function POST(req: Request) {
     return new NextResponse('Missing fields', { status: 400 });
   }
 
-  const created = await createPassword(session.user.id, siteName, email, passwordValue, secretToken);
+  const created = await createPassword(session.user.id, siteName, email, passwordValue);
   return NextResponse.json(created);
 }

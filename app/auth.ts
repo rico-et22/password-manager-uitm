@@ -7,7 +7,7 @@ import { authConfig } from 'app/auth.config';
 declare module 'next-auth' {
   interface Session {
     user: {
-      id: number;
+      id: number | any;
       firstName: string;
       lastName: string;
       [key: string]: any;
