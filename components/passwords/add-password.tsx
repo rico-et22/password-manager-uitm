@@ -48,7 +48,7 @@ export function AddPassword() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Add Password</Button>
+        <Button>Add Password</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
