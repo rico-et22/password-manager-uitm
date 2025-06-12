@@ -8,8 +8,8 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
-  const { siteName, email, passwordValue } = await req.json();
-  const data = { siteName, email, passwordValue };
+  const { siteName, email, passwordValue, totp } = await req.json();
+  const data = { siteName, email, passwordValue, totp };
 
   const result = await updatePassword(session.user.id, parseInt(params.id), data);
   return NextResponse.json(result);

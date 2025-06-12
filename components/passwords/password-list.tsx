@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { PasswordCard } from '@/components/ui/passwordCard';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -11,6 +10,7 @@ type Password = {
   email: string;
   passwordValue: string;
   secretToken?: string;
+  totp?: string;
 };
 
 export function PasswordList() {
@@ -35,6 +35,7 @@ export function PasswordList() {
           siteName={p.siteName}
           passwordValue={p.passwordValue}
           secretToken={p.secretToken}
+          totp={p.totp}
         />
       ))}
     </>

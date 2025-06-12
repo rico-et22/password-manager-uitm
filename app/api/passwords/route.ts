@@ -18,12 +18,12 @@ export async function POST(req: Request) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
-  const { siteName, email, passwordValue } = await req.json();
+  const { siteName, email, passwordValue, totp } = await req.json();
 
   if (!siteName || !email || !passwordValue) {
     return new NextResponse('Missing fields', { status: 400 });
   }
 
-  const created = await createPassword(session.user.id, siteName, email, passwordValue);
+  const created = await createPassword(session.user.id, siteName, email, passwordValue, totp);
   return NextResponse.json(created);
 }

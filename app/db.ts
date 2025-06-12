@@ -135,12 +135,17 @@ export async function getUser(email: string) {
   return await db.select().from(users).where(eq(users.email, email));
 }
 
-export async function createUser(email: string, password: string, firstName: string, lastName: string) {
+export async function createUser(
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+) {
   const users = await ensureTableExists();
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
 
-    return await db.insert(users).values({
+  return await db.insert(users).values({
     email,
     password: hash,
     firstName,
@@ -156,8 +161,8 @@ async function ensureTableExists() {
       AND table_name = 'User'
     );`;
 
-if (!result[0].exists) {
-  await client`
+  if (!result[0].exists) {
+    await client`
     CREATE TABLE "User" (
       id SERIAL PRIMARY KEY,
       email VARCHAR(64),
@@ -165,7 +170,7 @@ if (!result[0].exists) {
       first_name VARCHAR(64),
       last_name VARCHAR(64)
     );`;
-}
+  }
 
   await client`
     ALTER TABLE "User"
@@ -173,7 +178,7 @@ if (!result[0].exists) {
     ADD COLUMN IF NOT EXISTS last_name VARCHAR(64);
   `;
 
-    const pwExists = await client`
+  const pwExists = await client`
     SELECT EXISTS (
       SELECT FROM information_schema.tables
       WHERE table_schema='public' AND table_name='passwords'
@@ -186,7 +191,8 @@ if (!result[0].exists) {
         user_id INTEGER NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
         site_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        totp VARCHAR(255)
       );`;
   }
 
@@ -207,8 +213,8 @@ export const passwords = pgTable('passwords', {
   siteName: varchar('site_name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   passwordValue: varchar('password').notNull(),
+  totp: varchar('totp', { length: 255 }),
 });
-
 
 export async function listPasswords(userId: number) {
   return await db.select().from(passwords).where(eq(passwords.userId, userId));
@@ -219,16 +225,17 @@ export async function createPassword(
   userId: number,
   siteName: string,
   email: string,
-  passwordValue: string
+  passwordValue: string,
+  totp?: string,
 ) {
-  return await db.insert(passwords).values({ userId, siteName, email, passwordValue });
+  return await db.insert(passwords).values({ userId, siteName, email, passwordValue, totp });
 }
 
 // Update an existing entry, only if it belongs to the user
 export async function updatePassword(
   userId: number,
   id: number,
-  data: Partial<{ siteName: string; email: string; passwordValue: string }>
+  data: Partial<{ siteName: string; email: string; passwordValue: string }>,
 ) {
   return await db
     .update(passwords)
@@ -238,7 +245,5 @@ export async function updatePassword(
 
 // Delete an entry, only if it belongs to the user
 export async function deletePassword(userId: number, id: number) {
-  return await db
-    .delete(passwords)
-    .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
+  return await db.delete(passwords).where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 }

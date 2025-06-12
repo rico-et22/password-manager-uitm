@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 import { TOTP } from 'totp-generator';
 import { Input } from '@/components/ui/input';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import TwoFAModal from '../passwords/2fa-modal';
+import { Scanner } from '@yudiel/react-qr-scanner';
 
 export interface PasswordItem {
   id?: number;
@@ -27,9 +27,17 @@ export interface PasswordItem {
   passwordValue?: string;
   secretToken?: string;
   email?: string;
+  totp?: string;
 }
 
-export function PasswordCard({ siteName, id, passwordValue, secretToken, email }: PasswordItem) {
+export function PasswordCard({
+  siteName,
+  id,
+  passwordValue,
+  secretToken,
+  email,
+  totp,
+}: PasswordItem) {
   const [otp, setOtp] = useState('');
   const [expires, setExpires] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -40,32 +48,37 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
 
   useEffect(() => {
     const generateOTP = () => {
-      const { otp, expires } = TOTP.generate(secretToken || '');
-      setOtp(otp);
-      setExpires(expires);
+      if (totp) {
+        const secret = new URL(totp).searchParams.get('secret');
+        const { otp, expires } = TOTP.generate(secret || '');
+        setOtp(otp);
+        setExpires(expires);
 
-      const timeUntilExpiry = expires - Date.now();
-      setTimeout(() => {
-        generateOTP();
-      }, timeUntilExpiry);
+        const timeUntilExpiry = expires - Date.now();
+        setTimeout(() => {
+          generateOTP();
+        }, timeUntilExpiry);
+      }
     };
 
     generateOTP();
-  }, [secretToken]);
+  }, [secretToken, totp]);
 
   // based on expires, calculate time left in seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      const timeUntilExpiry = expires - Date.now();
-      const secondsLeft = Math.floor(timeUntilExpiry / 1000);
-      setTimeLeft(secondsLeft);
-      if (secondsLeft <= 0) {
-        clearInterval(interval);
-        setTimeLeft(0);
+      if (totp) {
+        const timeUntilExpiry = expires - Date.now();
+        const secondsLeft = Math.floor(timeUntilExpiry / 1000);
+        setTimeLeft(secondsLeft);
+        if (secondsLeft <= 0) {
+          clearInterval(interval);
+          setTimeLeft(0);
+        }
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [expires]);
+  }, [expires, totp]);
 
   const copyPassword = () => {
     if (passwordValue) {
@@ -76,7 +89,17 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
     }
   };
 
-  const [editData, setEditData] = useState({ siteName, email, passwordValue });
+  const [editData, setEditData] = useState({ siteName, email, passwordValue, totp });
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const setTOTP = (result: string) => {
+    if (!result.startsWith('otpauth:')) {
+      toast.error('Invalid TOTP format. Please scan a valid code.');
+      setScannerOpen(false);
+    } else {
+      setEditData(f => ({ ...f, totp: result }));
+      setScannerOpen(false);
+    }
+  };
 
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditData({ ...editData, [e.target.name]: e.target.value });
@@ -121,17 +144,19 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
   return (
     <Card className="w-full">
       <CardHeader>{siteName}</CardHeader>
-      <CardContent>
-        2FA code: {otp}
-        <div className="w-full h-2 bg-gray-100 relative rounded-md mt-1">
-          <div
-            className="h-2 bg-primary absolute top-0 left-0 transition-all duration-200 ease-in-out rounded-md"
-            style={{
-              width: `${(timeLeft / 30) * 100}%`,
-            }}
-          />
-        </div>
-      </CardContent>
+      {totp && (
+        <CardContent>
+          2FA code: {otp}
+          <div className="w-full h-2 bg-gray-100 relative rounded-md mt-1">
+            <div
+              className="h-2 bg-primary absolute top-0 left-0 transition-all duration-200 ease-in-out rounded-md"
+              style={{
+                width: `${(timeLeft / 30) * 100}%`,
+              }}
+            />
+          </div>
+        </CardContent>
+      )}
       <CardFooter className="flex-col gap-2">
         <Button variant="secondary" className="w-full" onClick={() => copyPassword()}>
           Copy Password
@@ -166,6 +191,42 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
                 onChange={handleEditChange}
                 required
               />
+              {!editData.totp && !scannerOpen && (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() => setScannerOpen(true)}
+                >
+                  Add 2FA
+                </Button>
+              )}
+              {editData.totp && (
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-500">TOTP: {editData.totp}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setEditData(f => ({ ...f, totp: '' }))}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              )}
+              {scannerOpen && (
+                <div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="mb-2 w-full"
+                    onClick={() => setScannerOpen(false)}
+                  >
+                    Close Scanner
+                  </Button>
+                  <p className="pb-2">Scan code below. Compatible with Google Authenticator</p>
+                  <Scanner onScan={result => setTOTP(result[0].rawValue)} />
+                </div>
+              )}
               <Button type="submit" className="w-full">
                 Save
               </Button>
@@ -196,7 +257,6 @@ export function PasswordCard({ siteName, id, passwordValue, secretToken, email }
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        {/* <TwoFAModal passwordId={id || 420} /> */}
       </CardFooter>
     </Card>
   );
