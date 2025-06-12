@@ -2,7 +2,6 @@ import { auth, signOut } from 'app/auth';
 import Image from 'next/image';
 import uitm_logo from '@/app/assets/utim_logo.png';
 import { Button } from '@/components/ui/button';
-import { PasswordCard } from '@/components/ui/passwordCard';
 import { AddPassword } from '@/components/passwords/add-password';
 import { PasswordList } from '@/components/passwords/password-list';
 export default async function ProtectedPage() {
@@ -19,11 +18,13 @@ export default async function ProtectedPage() {
           priority
         />
         <div className="flex flex-col md:flex-row gap-2 items-center">
-          <AddPassword />
           <SignOut />
         </div>
       </header>
       <main className="min-h-[80vh]">
+        <aside className="flex justify-end mx-6 mt-4">
+          <AddPassword />
+        </aside>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 grid-rows-auto">
           <PasswordList />
         </div>
