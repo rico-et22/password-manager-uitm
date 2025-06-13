@@ -61,6 +61,6 @@ export default {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
   darkMode: 'class',
 } satisfies Config;

@@ -1,4 +1,5 @@
 import './globals.css';
+import { ReactQueryProvider } from './providers/react-query-provider';
 import { Toaster } from 'sonner';
 
 let title = 'UITM Authenticator';
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-theme="light">
       <body>
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <Toaster richColors />
       </body>
     </html>
