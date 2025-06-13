@@ -2,8 +2,8 @@ import { auth, signOut } from 'app/auth';
 import Image from 'next/image';
 import uitm_logo from '@/app/assets/utim_logo.png';
 import { Button } from '@/components/ui/button';
-import { PasswordCard } from '@/components/ui/passwordCard';
-
+import { AddPassword } from '@/components/passwords/add-password';
+import { PasswordList } from '@/components/passwords/password-list';
 export default async function ProtectedPage() {
   let session = await auth();
 
@@ -17,15 +17,16 @@ export default async function ProtectedPage() {
           className="w-28 absolute left-1/2 -translate-x-1/2"
           priority
         />
-        <SignOut />
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          <SignOut />
+        </div>
       </header>
       <main className="min-h-[80vh]">
+        <aside className="flex justify-end mx-6 mt-4">
+          <AddPassword />
+        </aside>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 grid-rows-auto">
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
-          <PasswordCard />
+          <PasswordList />
         </div>
       </main>
       <footer className="text-center text-sm text-gray-500 mt-4 border-t pt-4">
@@ -45,7 +46,7 @@ function SignOut() {
         await signOut();
       }}
     >
-      <Button type="submit" variant="outline">
+      <Button type="submit" variant="outline" className="w-full">
         Sign out
       </Button>
     </form>
