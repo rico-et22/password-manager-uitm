@@ -30,7 +30,7 @@ export default async function ProtectedPage() {
         </div>
       </main>
       <footer className="text-center text-sm text-gray-500 mt-4 border-t pt-4">
-        Created by: Kamil Pawlak w69831, Jakub Karaś w70844, Miłosz Makiel w69817 <br />
+        Created by: Kamil Pawlak 69831, Piotr Ostrowski 69826, Jakub Karaś 70844, Yuriy Haravetskyy 70478, Ostap Holoborodko 70479, Miłosz Makiel 69817 <br />
         React + Next + TypeScript + Tailwind CSS + Radix UI + Prisma + Neon PostgreSQL +
         totp-generator
       </footer>
